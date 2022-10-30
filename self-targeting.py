@@ -7,5 +7,5 @@ from Bio import Entrez
 df = pd.read_csv('self-target.csv')
 
 # Get feature table of protospacer region
-for i in df['Refseq ID']:
-    result = Entrez.efetch(db='nuccore', id=i, seq_start=1146152, seq_stop=1146181, rettype='ft')
+for i, start, end in zip(df['Refseq ID'], df['Proto-spacer Start'], df['Proto-spacer End']):
+    result = Entrez.efetch(db='nuccore', id=i, seq_start=start, seq_stop=end, rettype='ft')
