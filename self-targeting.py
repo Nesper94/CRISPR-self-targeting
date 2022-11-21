@@ -82,10 +82,11 @@ for i in df['Protein id']:
                 gene = i.split()[0].split('"')[1]
             if 'EC_number' in i:
                 ec_number = i.split()[0].split('"')[1]
-            GO_function.append(func_id)
-            GO_process.append(process_id)
-            genes.append(gene)
-            EC_numbers.append(ec_number)
+
+        GO_function.append(func_id)
+        GO_process.append(process_id)
+        genes.append(gene)
+        EC_numbers.append(ec_number)
 
 df['GO Function'] = GO_function
 df['GO process'] = GO_process
