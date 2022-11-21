@@ -92,3 +92,6 @@ df['GO Function'] = GO_function
 df['GO process'] = GO_process
 df['Gene'] = genes
 df['EC number'] = EC_numbers
+
+# Save table to file
+df.to_csv('self-target-proteins.tsv', index=False, sep='\t')
