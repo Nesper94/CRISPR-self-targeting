@@ -3,7 +3,7 @@
 import pandas as pd
 from Bio import Entrez
 
-# Read CRISPR Self-Targeting database
+# Read CRISPRminer Self-Targeting database
 df = pd.read_csv('self-target.csv')
 
 # Create auxiliary lists
@@ -92,6 +92,28 @@ df['GO Function'] = GO_function
 df['GO process'] = GO_process
 df['Gene'] = genes
 df['EC number'] = EC_numbers
+
+# Get Taxonomy ID
+# Create auxiliary TaxIds list
+TaxIDs = []
+
+for i in df['Refseq ID']:
+    try:
+        handle = Entrez.esummary(db='nuccore', id=i)
+        result = Entrez.read(handle)
+        handle.close()
+    except Exception as e:
+        print(e, 'Refseq ID:', i)
+        TaxIDs.append('No NCBI response')
+        continue
+
+    try:
+        TaxIDs.append(result[0]['TaxId'].real)
+    except Exception as e:
+        print(e, 'Refseq ID:', i)
+        TaxIDs.append('No TaxID')
+
+df['TaxID'] = TaxIDs
 
 # Save table to file
 df.to_csv('self-target-proteins.tsv', index=False, sep='\t')
