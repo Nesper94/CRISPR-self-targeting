@@ -13,8 +13,9 @@ protein_ids = []
 # Get feature table of protospacer region
 for i, start, end in zip(df['Refseq ID'], df['Proto-spacer Start'], df['Proto-spacer End']):
     try:
-        result = Entrez.efetch(db='nuccore', id=i, seq_start=start, seq_stop=end, rettype='ft')
-        feature_table = result.read().split('\t')
+        handle = Entrez.efetch(db='nuccore', id=i, seq_start=start, seq_stop=end, rettype='ft')
+        feature_table = handle.read().split('\t')
+        handle.close()
     except Exception as e:
         print(e, 'Refseq ID:', i, 'Start:', start, 'End:', end)
         products.append('Error: '+str(e))
@@ -56,7 +57,9 @@ for i in df['Protein id']:
         EC_numbers.append(i)
     else:
         try:
-            result = Entrez.efetch(db='protein', id=i, rettype='gp')
+            handle = Entrez.efetch(db='protein', id=i, rettype='gp')
+            result = handle.read()
+            handle.close()
         except Exception as e:
             err = 'Error: '+str(e)
             GO_function.append(err)
@@ -65,7 +68,6 @@ for i in df['Protein id']:
             EC_numbers.append(err)
             continue
 
-        result = result.read()
         res_list = result.split('\n')
         func_id = 'No function id'
         process_id = 'No process id'
