@@ -15,24 +15,27 @@ for i, start, end in zip(df['Refseq ID'], df['Proto-spacer Start'], df['Proto-sp
     try:
         result = Entrez.efetch(db='nuccore', id=i, seq_start=start, seq_stop=end, rettype='ft')
         feature_table = result.read().split('\t')
-    except:
-        products.append('No info')
-        protein_ids.append('No info')
+    except Exception as e:
+        print(e, 'Refseq ID:', i, 'Start:', start, 'End:', end)
+        products.append('Error: '+str(e))
+        protein_ids.append('Error: '+str(e))
         continue
 
     # Get product name
     try:
         product_idx = feature_table.index('product')
         products.append(feature_table[product_idx + 1].strip())
-    except:
-        products.append('No protein')
+    except Exception as e:
+        print(e, 'Refseq ID:', i, 'Start:', start, 'End:', end)
+        products.append('Error: '+str(e))
 
     # Get protein ID
     try:
         protein_id_idx = feature_table.index('protein_id')
         protein_ids.append(feature_table[protein_id_idx + 1].replace('ref|','').strip('\n|'))
-    except(ValueError):
-        protein_ids.append('No protein')
+    except Exception as e:
+        print(e, 'Refseq ID:', i, 'Start:', start, 'End:', end)
+        protein_ids.append('Error: '+str(e))
 
 # Modify original dataframe
 df['Product'] = products
@@ -46,24 +49,20 @@ EC_numbers = []
 
 # Download protein info
 for i in df['Protein id']:
-    if i == 'No info':
-        GO_function.append('No NCBI response')
-        GO_process.append('No NCBI response')
-        genes.append('No NCBI response')
-        EC_numbers.append('No NCBI response')
-    elif i == 'No protein':
-        GO_function.append('No protein')
-        GO_process.append('No protein')
-        genes.append('No protein')
-        EC_numbers.append('No protein')
+    if 'Error:' in i:
+        GO_function.append(i)
+        GO_process.append(i)
+        genes.append(i)
+        EC_numbers.append(i)
     else:
         try:
             result = Entrez.efetch(db='protein', id=i, rettype='gp')
-        except:
-            GO_function.append('No NCBI response')
-            GO_process.append('No NCBI response')
-            genes.append('No NCBI response')
-            EC_numbers.append('No NCBI response')
+        except Exception as e:
+            err = 'Error: '+str(e)
+            GO_function.append(err)
+            GO_process.append(err)
+            genes.append(err)
+            EC_numbers.append(err)
             continue
 
         result = result.read()
