@@ -118,3 +118,17 @@ df['TaxID'] = TaxIDs
 
 # Save table to file
 df.to_csv('self-target-proteins.tsv', index=False, sep='\t')
+
+# Get species and genus
+species_l = []
+genus_l = []
+
+for i in df['Organism']:
+    split = i.split()
+    genus = split[0]
+    species = ' '.join(split[0:2])
+    species_l.append(species)
+    genus_l.append(genus)
+
+df['Species'] = species_l
+df['Genus'] = genus_l
