@@ -52,6 +52,8 @@ for id_, start, end in zip(df['Refseq ID'], df['Spacer Start'], df['Spacer End']
 
 # Create new column from list
 df['CRISPR Type'] = crisprt
+# Clean result
+df['CRISPR Type'] = df['CRISPR Type'].str.replace('\nName: Prediction, dtype: object', '').str.replace('0    ','')
 
 # Save dataframe
 df.to_csv('self-target-proteins.tsv', index=False, sep='\t')
