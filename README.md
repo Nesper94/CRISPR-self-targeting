@@ -1,5 +1,8 @@
 # CRISPR self-targeting spacers
 
+**Note:** This repository will not be updated, updated code can be found on
+<https://github.com/Biologia-Computacional/CRISPR-self-targeting>.
+
 This repository contains the main code for data collection and analysis of
 CRISPR self-targeting spacers.
 
